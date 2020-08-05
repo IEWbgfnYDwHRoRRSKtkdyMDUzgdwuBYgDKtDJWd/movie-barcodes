@@ -6,13 +6,12 @@ import argparse
 import cv2
 import numpy as np
 
-OUT_WIDTH = 2560
-OUT_HEIGHT = 1280
+#OUT_WIDTH = ['width]
+#OUT_HEIGHT = (HEIGHT)
 
 # In compressed mode, each frame is resized into a 1xSAMPLE_HEIGHT vector.
 # SAMPLE_HEIGHT should be at most the input height and at least 1 (which
 # is equivalent to uniform mode). Smaller values yield smoother results.
-SAMPLE_HEIGHT = 8
 
 def generate_barcode():
     cap = cv2.VideoCapture(VIDEO)
@@ -46,9 +45,14 @@ if __name__ == "__main__":
     start_time = time.time()
     ap = argparse.ArgumentParser()
     ap.add_argument("-video", help="Path to video file", required=True)
+    ap.add_argument("-width", required=True)
+    ap.add_argument("-height",  required=True)
     ap.add_argument("-u", help="Use uniform color columns", action='store_true')
     args = vars(ap.parse_args())
     VIDEO, UNIFORM_COLS = args["video"], args["u"]
+    OUT_WIDTH = int(args["width"])
+    OUT_HEIGHT = int(args["height"])
+    SAMPLE_HEIGHT = int(args["height"])
     OUT_NAME = os.path.splitext(os.path.basename(VIDEO))[0] + "_barcode.jpg"
 
     generate_barcode()
