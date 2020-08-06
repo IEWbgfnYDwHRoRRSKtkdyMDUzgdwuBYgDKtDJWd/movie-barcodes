@@ -1,6 +1,7 @@
 #!/bin/bash
-#!bash moviebarcode.sh video6.mp4 6 batchno
-#!bash moviebarcode.sh video6.mp4 6 batchyes
+#bash moviebarcode.sh vid widthfactor batchpreference
+#bash moviebarcode.sh video6.mp4 6 batchno
+#bash moviebarcode.sh x 6 batchyes
 
 function vidinfo () {
 	INPUT="${FILE}"
