@@ -47,12 +47,13 @@ if __name__ == "__main__":
     ap.add_argument("-video", help="Path to video file", required=True)
     ap.add_argument("-width", required=True)
     ap.add_argument("-height",  required=True)
+    ap.add_argument("-sample_height",  required=True)
     ap.add_argument("-u", help="Use uniform color columns", action='store_true')
     args = vars(ap.parse_args())
     VIDEO, UNIFORM_COLS = args["video"], args["u"]
     OUT_WIDTH = int(args["width"])
     OUT_HEIGHT = int(args["height"])
-    SAMPLE_HEIGHT = int(args["height"])
+    SAMPLE_HEIGHT = int(args["sample_height"])
     OUT_NAME = os.path.splitext(os.path.basename(VIDEO))[0] + "_barcode.jpg"
 
     generate_barcode()
