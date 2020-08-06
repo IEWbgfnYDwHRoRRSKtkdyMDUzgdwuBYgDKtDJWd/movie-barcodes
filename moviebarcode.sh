@@ -7,12 +7,10 @@ function vidinfo () {
 	width=$(ffprobe -select_streams v -show_streams $INPUT 2>/dev/null | grep coded_width | sed -e 's/coded_width=//')
 	height=$(ffprobe -select_streams v -show_streams $INPUT 2>/dev/null | grep coded_height | sed -e 's/coded_height=//')
 
-	echo ------------------------------- 
-	echo imginfo: $INPUT 
-	echo  
-	echo width: "$width"
-	echo height: "$height"
-	echo ------------------------------- 
+	echo 
+	echo \[vidinfo\]":" $INPUT 
+	echo \[width\]":" "$width"
+	echo \[height\]":" "$height"
 }
 
 function batchno () {
@@ -24,23 +22,35 @@ function batchno () {
 
 function batchyes () {
 
-		mkdir out
-		while read line; do
 		
-			mkdir temp
-			cd temp
-			FILE=$(youtube-dl -s --get-filename -f 'bestvideo[height<=1080]' $line -o '%(id)s.%(ext)s')
-			youtube-dl -f 'bestvideo[height<=1080]' $line -o '%(id)s.%(ext)s'
+		if [ ! -d "out" ]
+			then
+			mkdir out
+		fi
+		
+		while read line;
+		do
+		
+			TITLEext=$(youtube-dl -s --get-filename -f 'bestvideo[height<=720]' $line -o '%(title)s.%(ext)s');
+			echo \[Downloading Video\]":" "$TITLEext";
+			echo ;
+			TITLE="${TITLEext%.*}";
+			ext="${TITLEext##*.}";
+			FILE=tmp.$ext;
+			youtube-dl -f 'bestvideo[height<=720]' $line -o "$FILE";
 			vidinfo;
-			mv $FILE ../$FILE
-			cd ../
-			python3 barcode.py -video "$FILE" -width $((width*widthfactor)) -height $height
-			mv "$FILE" temp/"$FILE"
-			rm -rf temp
-			find . -maxdepth 1  -name "*.jpg" -exec mv "{}" ./out \;
+			echo \[barcode output dims\] = \[$((width*widthfactor)) x $height\] \(width factor = $widthfactor\);
+			echo ;
+			python3 barcode.py -video "$FILE" -width $((width*widthfactor)) -height $height;
+			mv tmp_barcode.jpg ./out/"$TITLE"-barcode.jpg;
+			echo ;
+			echo \[deleting temp video\]":" "$FILE";
+			echo ;
+			rm -rf "$FILE";
 			
-		done <batch.txt
+		 done <batch.txt
 }
+
 
 FILE=$1
 widthfactor=$2
