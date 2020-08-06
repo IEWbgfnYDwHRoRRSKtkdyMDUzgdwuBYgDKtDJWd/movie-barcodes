@@ -17,4 +17,4 @@ FILE=$1
 
 
 		vidinfo;
-		python3 barcode.py -video "$FILE" -width $width -height $width
+		python3 barcode.py -video "$FILE" -width $width -height $width -sample_height $2
