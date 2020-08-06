@@ -14,7 +14,8 @@ function vidinfo () {
 }
 
 FILE=$1
+widthfactor=$2
 
 
 		vidinfo;
-		python3 barcode.py -video "$FILE" -width $width -height $width -sample_height $2
+		python3 barcode.py -video "$FILE" -width $((width*widthfactor)) -height $height
