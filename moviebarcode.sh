@@ -2,7 +2,7 @@
 #bash moviebarcode.sh vid widthfactor batchpreference
 #bash moviebarcode.sh video6.mp4 6 batchno
 #bash moviebarcode.sh x 6 batchyes
-##var trimfactortoframes_yn can be set to "y" or "n" to trim width to exact frame count
+##var trimfactortoframes_yn can be set to "y" or "n" to trim width to exact frame count if factor multiplication exceeds it
 
 function vidinfo () {
 	INPUT="${FILE}"
@@ -47,13 +47,23 @@ function batchyes () {
 		fi
 		while read line;
 		do
-			TITLEext=$(youtube-dl -s --get-filename -f 'bestvideo[height<=720]' $line -o '%(title)s.%(ext)s');
+			if [ $trimfactortoframes_yn == 'y' ]; 
+				then
+					TITLEext=$(youtube-dl -s --get-filename -f 'mp4/bestvideo[height<=720]' $line -o '%(title)s.%(ext)s');
+				else
+					TITLEext=$(youtube-dl -s --get-filename -f 'bestvideo[height<=720]' $line -o '%(title)s.%(ext)s');
+			fi
 			echo \[Downloading Video\]":" "$TITLEext";
 			echo ;
 			TITLE="${TITLEext%.*}";
 			ext="${TITLEext##*.}";
 			FILE=tmp.$ext;
-			youtube-dl -f 'bestvideo[height<=720]' $line -o "$FILE";
+			if [ $trimfactortoframes_yn == 'y' ]; 
+				then
+					youtube-dl -f 'mp4/bestvideo[height<=720]' $line -o "$FILE";
+				else
+					youtube-dl -f 'bestvideo[height<=720]' $line -o "$FILE";
+			fi
 			batchno;
 			mv tmp_barcode.jpg ./out/"$TITLE"-barcode.jpg;
 			echo ;
@@ -66,7 +76,7 @@ function batchyes () {
 FILE=$1
 widthfactor=$2
 batch=$3
-trimfactortoframes_yn=y
+trimfactortoframes_yn=n
 
 if [ $batch == 'batchno' ];then
 	batchno
