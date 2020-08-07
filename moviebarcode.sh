@@ -2,7 +2,7 @@
 #bash moviebarcode.sh vid widthfactor batchpreference
 #bash moviebarcode.sh video6.mp4 6 batchno
 #bash moviebarcode.sh x 6 batchyes
-##var trimfactortoframes_yn can be set to "y" or "no" to trim width to exact frame count
+##var trimfactortoframes_yn can be set to "y" or "n" to trim width to exact frame count
 
 function vidinfo () {
 	INPUT="${FILE}"
@@ -43,7 +43,7 @@ function batchyes () {
 
 		if [ ! -d "out" ]
 			then
-			mkdir out
+				mkdir out
 		fi
 		while read line;
 		do
@@ -62,15 +62,15 @@ function batchyes () {
 			rm -rf "$FILE";
 		 done <batch.txt
 }
+
 FILE=$1
 widthfactor=$2
 batch=$3
 trimfactortoframes_yn=y
 
-
 if [ $batch == 'batchno' ];then
-batchno
+	batchno
 fi
 if [ $batch == 'batchyes' ];then
-batchyes
+	batchyes
 fi
